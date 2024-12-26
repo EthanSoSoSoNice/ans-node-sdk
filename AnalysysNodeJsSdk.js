@@ -1,5 +1,5 @@
-// import request from 'request';            //请求的公共模块
-import request from 'sync-request';       //请求的公共模块 同步
+import request from 'request';            //请求的公共模块
+// import request from 'sync-request';       //请求的公共模块 同步
 import baseConfig from './lib/AnalysysBase';    //基本配置文件 包括事件名称，成功码、错误码等
 import { successLog, errorLog } from './lib/AnalysysLog'; //成功日志 和 错误日志
 import check from './lib/AnalysysCheck';  // 校验模块
@@ -38,7 +38,7 @@ class AnalysysAgent {
     /**
      * 重置状态,每次打印前的重置
      */
-    resetCode () {
+    resetCode() {
         this.code = 400;
         baseConfig.status = {
             'code': 200,
@@ -53,7 +53,7 @@ class AnalysysAgent {
      * 注册超级属性
      * @param params key
      */
-    registerSuperProperty (key, value) {
+    registerSuperProperty(key, value) {
         this.resetCode();
         baseConfig.status.FnName = '$registerSuperProperty';
         var obj = Util.toObj(key, value);
@@ -72,7 +72,7 @@ class AnalysysAgent {
      * 注册超级属性,注册后每次发送的消息体中都包含该属性值
      * @param params 属性
      */
-    registerSuperProperties (property) {
+    registerSuperProperties(property) {
         this.resetCode();
         var superProperty = this.superProperty;
         baseConfig.status.FnName = '$registerSuperProperties';
@@ -92,7 +92,7 @@ class AnalysysAgent {
      * @param key 属性KEY
      * @return 该KEY的超级属性值
      */
-    getSuperProperty (key) {
+    getSuperProperty(key) {
         this.resetCode();
         baseConfig.status.FnName = '$getSuperProperty';
         baseConfig.status.key = key;
@@ -114,7 +114,7 @@ class AnalysysAgent {
      * @return 所有超级属性
      */
 
-    getSuperProperties () {
+    getSuperProperties() {
         this.resetCode();
         baseConfig.status.FnName = '$getSuperProperties';
         baseConfig.status.successCode = '20010';
@@ -128,7 +128,7 @@ class AnalysysAgent {
      * 移除超级属性
      * @param key 属性key
      */
-    unRegisterSuperProperty (key) {
+    unRegisterSuperProperty(key) {
         this.resetCode();
         baseConfig.status.value = key;
         baseConfig.status.FnName = '$unRegisterSuperProperty';
@@ -149,7 +149,7 @@ class AnalysysAgent {
     /**
      * 清除超级属性
      */
-    clearSuperProperties () {
+    clearSuperProperties() {
         this.resetCode();
         baseConfig.status.FnName = '$clearSuperProperties';
         baseConfig.status.successCode = '20004';
@@ -162,7 +162,7 @@ class AnalysysAgent {
     /**
      * 立即发送所有收集的信息到服务器
      */
-    flush () {
+    flush() {
         if (this.postData.length > 0) {
             return this.send();
         }
@@ -187,7 +187,7 @@ class AnalysysAgent {
      * @param isLogin 用户ID是否是登录 ID
      * @param properties 用户属性
      */
-    profileSet (distinctId, isLogin, properties, platform, upLoadTime) {
+    profileSet(distinctId, isLogin, properties, platform, upLoadTime) {
         this.resetCode();
         baseConfig.status.FnName = '$profile_set';
         if (!check.checkUploadTime(upLoadTime)) {
@@ -206,7 +206,7 @@ class AnalysysAgent {
      * @param isLogin 用户ID是否是登录 ID
      * @param properties 用户属性
      */
-    profileSetOnce (distinctId, isLogin, properties, platform, upLoadTime) {
+    profileSetOnce(distinctId, isLogin, properties, platform, upLoadTime) {
         this.resetCode();
         baseConfig.status.FnName = '$profile_set_once';
         if (!check.checkUploadTime(upLoadTime)) {
@@ -225,7 +225,7 @@ class AnalysysAgent {
      * @param isLogin 用户ID是否是登录 ID
      * @param properties 用户属性
      */
-    profileIncrement (distinctId, isLogin, properties, platform, upLoadTime) {
+    profileIncrement(distinctId, isLogin, properties, platform, upLoadTime) {
         this.resetCode();
         baseConfig.status.FnName = '$profile_increment';
         if (!check.checkUploadTime(upLoadTime)) {
@@ -261,7 +261,7 @@ class AnalysysAgent {
      * @param isLogin 用户ID是否是登录 ID
      * @param properties 用户属性
      */
-    profileAppend (distinctId, isLogin, properties, platform, upLoadTime) {
+    profileAppend(distinctId, isLogin, properties, platform, upLoadTime) {
         this.resetCode();
         baseConfig.status.FnName = '$profile_append';
         if (!check.checkUploadTime(upLoadTime)) {
@@ -281,7 +281,7 @@ class AnalysysAgent {
      * @param property 用户属性名称
      * @throws AnalysysException
      */
-    profileUnSet (distinctId, isLogin, property, platform, upLoadTime) {
+    profileUnSet(distinctId, isLogin, property, platform, upLoadTime) {
         this.resetCode();
         baseConfig.status.FnName = '$profile_unset';
         if (!check.checkUploadTime(upLoadTime)) {
@@ -302,7 +302,7 @@ class AnalysysAgent {
      * @param isLogin 用户ID是否是登录 ID
      * @throws AnalysysException
      */
-    profileDelete (distinctId, isLogin, platform, upLoadTime) {
+    profileDelete(distinctId, isLogin, platform, upLoadTime) {
         this.resetCode();
         baseConfig.status.FnName = '$profile_delete';
         if (!check.checkUploadTime(upLoadTime)) {
@@ -321,7 +321,7 @@ class AnalysysAgent {
      * @throws AnalysysException
      */
 
-    alias (aliasId, distinctId, platform, upLoadTime) {
+    alias(aliasId, distinctId, platform, upLoadTime) {
         this.resetCode();
         baseConfig.status.FnName = '$alias';
         if (!check.checkUploadTime(upLoadTime)) {
@@ -343,7 +343,7 @@ class AnalysysAgent {
      * @param properties 事件属性
      * @throws AnalysysException
      */
-    track (distinctId, isLogin, eventName, properties, platform, upLoadTime) {
+    track(distinctId, isLogin, eventName, properties, platform, upLoadTime) {
         this.resetCode();
         baseConfig.status.FnName = eventName;
         // baseConfig.status.FnName = eventName || "$track";
@@ -374,7 +374,7 @@ class AnalysysAgent {
      * @param properties 属性
      * @throws AnalysysException
      */
-    upLoad (distinctId, isLogin, eventName, properties, platform, upLoadTime, merFlag) {
+    upLoad(distinctId, isLogin, eventName, properties, platform, upLoadTime, merFlag) {
         //API 方法校验了参数，上传就不校验了
         var eventMap = {};
         eventMap.appid = this.appId;
@@ -421,7 +421,7 @@ class AnalysysAgent {
     /**
      * 上传方式
      */
-    send () {
+    send() {
         var _this = this;
         this.resetCode();
         // 对appid 进行校验
