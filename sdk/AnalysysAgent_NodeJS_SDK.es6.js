@@ -1,4 +1,4 @@
-import request from 'sync-request';
+import request from 'request';
 import fs from 'fs';
 import path from 'path';
 import 'zlib';
@@ -30,14 +30,14 @@ class Util {
      * @param param 被校验的对象
      * @throws 数据类型
      */
-    paramType (param) {
+    paramType(param) {
         return Object.prototype.toString.call(param).replace('[object ', '').replace(']', '');
     }
     /**
      * 参数合并生成对象
      * @throws 生成的对象
      */
-    keyValueToObj (key, value) {
+    keyValueToObj(key, value) {
         let obj = {};
         // obj[key] = value || ""
         obj[key] = value;
@@ -47,7 +47,7 @@ class Util {
      * 参数 数组 合并生成对象
      * @throws 生成的对象
      */
-    ArrayToObj (arr) {
+    ArrayToObj(arr) {
         var obj = {};
         for (var i = 0; i < arr.length; i++) {
             obj[arr[i]] = '';
@@ -60,7 +60,7 @@ class Util {
      * @param param2 生成对象的 value
      * @throws 合并之后的对象
      */
-    toObj (param1, param2) {
+    toObj(param1, param2) {
         var obj = {};
         // if (this.paramType(param1) === 'String' || this.paramType(param1) === 'Number' || this.paramType(param1) === 'Null' || this.paramType(param1) === 'Boolean' || this.paramType(param1) === 'Undefined') {
 
@@ -81,7 +81,7 @@ class Util {
      * @param  被校验的对象
      * @throws 合并之后的对象
      */
-    objMerge (parentObj, part) {
+    objMerge(parentObj, part) {
         if (this.paramType(parentObj) !== 'Object' || this.paramType(part) !== 'Object') {
             return parentObj;
         }
@@ -103,14 +103,14 @@ class Util {
     /**
      * 数组合并之后的去重
      */
-    arrayMergeUnique (arr1, arr2) {
+    arrayMergeUnique(arr1, arr2) {
         arr1.push.apply(arr1, arr2);
         return this.arrayUnique(arr1);
     }
     /**
      * 数组去重
      */
-    arrayUnique (arr) {
+    arrayUnique(arr) {
         var tmpArr = [],
             hash = {}; //hash为hash表
         for (var i = 0; i < arr.length; i++) {
@@ -124,7 +124,7 @@ class Util {
     /**
      * 对象删除 值为 空的 键
      */
-    delEmpty (obj) {
+    delEmpty(obj) {
         var newObj = {};
         for (var key in obj) {
             var inType = true;
@@ -159,10 +159,10 @@ class Util {
      * @param length 截取的长度
      * @throws 截取之后的字符串
      */
-    stringSlice (str, length) {
+    stringSlice(str, length) {
         return str.slice(0, length);
     }
-    checkURL (URL) {
+    checkURL(URL) {
         let str = URL;
         //判断URL地址的正则表达式为:http(s)?://([\w-]+\.)+[\w-]+(/[\w- ./?%&=]*)?
         //下面的代码中应用了转义字符"\"输出一个字符"/"
@@ -175,14 +175,14 @@ class Util {
         }
     }
     // 检查url
-    checkUrlLast (ServerUrl) {
+    checkUrlLast(ServerUrl) {
         if (ServerUrl.charAt(ServerUrl.length - 1) !== '/') {
             ServerUrl += '/';
         }
         return ServerUrl;
     }
     // 时间方法
-    timeObj () {
+    timeObj() {
         var Time = new Date();
         var Year = Time.getFullYear();
         var Month = Time.getMonth() + 1;
@@ -198,7 +198,7 @@ class Util {
         };
     }
     // 循环创建目录 同步方法
-    mkdirs (filepath) {
+    mkdirs(filepath) {
         if (fs.existsSync(filepath)) {
             return true;
         } else {
@@ -360,7 +360,7 @@ class Check {
      * @throws Boolean
      * 逻辑：
      */
-    checkKey (key) {
+    checkKey(key) {
         baseConfig.status.key = key;
         if (!isString(key) || !length99(key) || !notSpecialCharacters(key) || !keywords(key)) {
             errorLog();
@@ -378,7 +378,7 @@ class Check {
      *      判断是 Array 是 isArrayString 返回 true ，否则 返回 false
      *      判断是 Obj ，是undefined 和 null 返回false，其他返回 true
      */
-    checkValue (val) {
+    checkValue(val) {
         baseConfig.status.value = val;
         if (Util$1.paramType(val) == 'Number') return val;
         if (Util$1.paramType(val) == 'Boolean') return val;
@@ -426,7 +426,7 @@ class Check {
      * @param property Object
      * @throws Boolean
      */
-    checkProperty (property) {
+    checkProperty(property) {
         if (isObject(property)) {
             if (Object.keys(property).length > 0) {
                 for (var key in property) {
@@ -457,7 +457,7 @@ class Check {
      * @param boolean
      * @throws Boolean
      */
-    checkBoolean (bool) {
+    checkBoolean(bool) {
         baseConfig.status.key = bool;
         baseConfig.status.value = bool;
         if (!isBoolean(bool)) {
@@ -471,7 +471,7 @@ class Check {
      * @param time
      * @throws Boolean
      */
-    checkTime (time) {
+    checkTime(time) {
         baseConfig.status.value = time;
         if (!isNumber(time) || lengthTime(time) != 13 || (time + '').indexOf('.') > - 1) {
             return false;
@@ -489,17 +489,17 @@ class Check {
         }
     },
      */
-    checkDistinctId (id) {
+    checkDistinctId(id) {
         baseConfig.status.key = 'distinctId';
         if (this.checkId(id)) return true;
         return false;
     }
-    checkAliasId (id) {
+    checkAliasId(id) {
         baseConfig.status.key = 'aliasId';
         if (this.checkId(id)) return true;
         return false;
     }
-    checkId (id) {
+    checkId(id) {
         baseConfig.status.val = id;
         if (!isString(id) || !keyLength255(id)) {
             baseConfig.status.errorCode = '600011';
@@ -512,7 +512,7 @@ class Check {
      * @param 取值长度 1 - 99字符,支持类型：String
      * @throws Boolean
      */
-    checkEventName (eventName) {
+    checkEventName(eventName) {
         baseConfig.status.key = eventName;
         if (!isString(eventName) || !length99(eventName) || !notSpecialCharacters(eventName)) {
             errorLog();
@@ -525,7 +525,7 @@ class Check {
      * @param 取值长度 1 - 125字符,支持类型：String
      * @throws Boolean
      */
-    checkIncrementKey (key) {
+    checkIncrementKey(key) {
         baseConfig.status.key = key;
         if (!isString(key) || !length99(key) || !notSpecialCharacters(key)) {
             errorLog();
@@ -538,7 +538,7 @@ class Check {
      * @param 支持类型：Number
      * @throws Boolean
      */
-    checkIncrementValue (value) {
+    checkIncrementValue(value) {
         baseConfig.status.value = value;
         if (!isNumber(value)) {
             errorLog();
@@ -551,7 +551,7 @@ class Check {
      * @param 取值长度 1 - 125字符,支持类型：String
      * @throws Boolean
      */
-    checkUnsetKey (key) {
+    checkUnsetKey(key) {
         baseConfig.status.key = key;
         if (!isString(key) || !length99(key) || !notSpecialCharacters(key)) {
             errorLog();
@@ -561,7 +561,7 @@ class Check {
     }
     //校验上传，假如存在uploadTime 的校验，没有uploadTime 直接return ture
     //校验规则，允许string number ，string转成number 和number 必须符合时间戳要求，不能有点之类的
-    checkUploadTime (upLoadTime) {
+    checkUploadTime(upLoadTime) {
         if (Util$1.paramType(upLoadTime) == 'Undefined') {
             return true;
         }
@@ -580,7 +580,7 @@ class Check {
     }
 
     // 检查 基础配置 appid uploadUrl platform
-    checkBase (appId, uploadURL) {
+    checkBase(appId, uploadURL) {
         if (!appId || !uploadURL) {
             var option = '';
             if (!appId) option = 'appId ';
@@ -600,7 +600,7 @@ class Check {
         return true;
     }
     // 检查 基础配置 appid
-    checkAppid (appid) {
+    checkAppid(appid) {
         if (Util$1.paramType(appid) != 'String' || appid == '') {
             baseConfig.status.errorCode = '600021';
             baseConfig.status.FnName = 'Init SDK';
@@ -612,7 +612,7 @@ class Check {
         return true;
     }
     // 对 平台名称 进行校验
-    checkPlatform (platform) {
+    checkPlatform(platform) {
         if (Util$1.paramType(platform) == 'String') {
             if (platform.toUpperCase() == 'NODE' || platform == '') {
                 platform = 'Node';
@@ -638,7 +638,7 @@ class Check {
         return 'Node';
     }
     // 落文件路径
-    checkGerFolder (gerFolder) {
+    checkGerFolder(gerFolder) {
         if (Util$1.paramType(gerFolder) != 'String' || gerFolder == '') {
             baseConfig.status.errorCode = '600021';
             baseConfig.status.FnName = 'Init logCollector';
@@ -794,7 +794,7 @@ class AnalysysAgent {
     /**
      * 重置状态,每次打印前的重置
      */
-    resetCode () {
+    resetCode() {
         this.code = 400;
         baseConfig.status = {
             'code': 200,
@@ -809,7 +809,7 @@ class AnalysysAgent {
      * 注册超级属性
      * @param params key
      */
-    registerSuperProperty (key, value) {
+    registerSuperProperty(key, value) {
         this.resetCode();
         baseConfig.status.FnName = '$registerSuperProperty';
         var obj = Util$1.toObj(key, value);
@@ -828,7 +828,7 @@ class AnalysysAgent {
      * 注册超级属性,注册后每次发送的消息体中都包含该属性值
      * @param params 属性
      */
-    registerSuperProperties (property) {
+    registerSuperProperties(property) {
         this.resetCode();
         var superProperty = this.superProperty;
         baseConfig.status.FnName = '$registerSuperProperties';
@@ -848,7 +848,7 @@ class AnalysysAgent {
      * @param key 属性KEY
      * @return 该KEY的超级属性值
      */
-    getSuperProperty (key) {
+    getSuperProperty(key) {
         this.resetCode();
         baseConfig.status.FnName = '$getSuperProperty';
         baseConfig.status.key = key;
@@ -870,7 +870,7 @@ class AnalysysAgent {
      * @return 所有超级属性
      */
 
-    getSuperProperties () {
+    getSuperProperties() {
         this.resetCode();
         baseConfig.status.FnName = '$getSuperProperties';
         baseConfig.status.successCode = '20010';
@@ -884,7 +884,7 @@ class AnalysysAgent {
      * 移除超级属性
      * @param key 属性key
      */
-    unRegisterSuperProperty (key) {
+    unRegisterSuperProperty(key) {
         this.resetCode();
         baseConfig.status.value = key;
         baseConfig.status.FnName = '$unRegisterSuperProperty';
@@ -905,7 +905,7 @@ class AnalysysAgent {
     /**
      * 清除超级属性
      */
-    clearSuperProperties () {
+    clearSuperProperties() {
         this.resetCode();
         baseConfig.status.FnName = '$clearSuperProperties';
         baseConfig.status.successCode = '20004';
@@ -918,7 +918,7 @@ class AnalysysAgent {
     /**
      * 立即发送所有收集的信息到服务器
      */
-    flush () {
+    flush() {
         if (this.postData.length > 0) {
             return this.send();
         }
@@ -943,7 +943,7 @@ class AnalysysAgent {
      * @param isLogin 用户ID是否是登录 ID
      * @param properties 用户属性
      */
-    profileSet (distinctId, isLogin, properties, platform, upLoadTime) {
+    profileSet(distinctId, isLogin, properties, platform, upLoadTime) {
         this.resetCode();
         baseConfig.status.FnName = '$profile_set';
         if (!check.checkUploadTime(upLoadTime)) {
@@ -962,7 +962,7 @@ class AnalysysAgent {
      * @param isLogin 用户ID是否是登录 ID
      * @param properties 用户属性
      */
-    profileSetOnce (distinctId, isLogin, properties, platform, upLoadTime) {
+    profileSetOnce(distinctId, isLogin, properties, platform, upLoadTime) {
         this.resetCode();
         baseConfig.status.FnName = '$profile_set_once';
         if (!check.checkUploadTime(upLoadTime)) {
@@ -981,7 +981,7 @@ class AnalysysAgent {
      * @param isLogin 用户ID是否是登录 ID
      * @param properties 用户属性
      */
-    profileIncrement (distinctId, isLogin, properties, platform, upLoadTime) {
+    profileIncrement(distinctId, isLogin, properties, platform, upLoadTime) {
         this.resetCode();
         baseConfig.status.FnName = '$profile_increment';
         if (!check.checkUploadTime(upLoadTime)) {
@@ -1017,7 +1017,7 @@ class AnalysysAgent {
      * @param isLogin 用户ID是否是登录 ID
      * @param properties 用户属性
      */
-    profileAppend (distinctId, isLogin, properties, platform, upLoadTime) {
+    profileAppend(distinctId, isLogin, properties, platform, upLoadTime) {
         this.resetCode();
         baseConfig.status.FnName = '$profile_append';
         if (!check.checkUploadTime(upLoadTime)) {
@@ -1037,7 +1037,7 @@ class AnalysysAgent {
      * @param property 用户属性名称
      * @throws AnalysysException
      */
-    profileUnSet (distinctId, isLogin, property, platform, upLoadTime) {
+    profileUnSet(distinctId, isLogin, property, platform, upLoadTime) {
         this.resetCode();
         baseConfig.status.FnName = '$profile_unset';
         if (!check.checkUploadTime(upLoadTime)) {
@@ -1058,7 +1058,7 @@ class AnalysysAgent {
      * @param isLogin 用户ID是否是登录 ID
      * @throws AnalysysException
      */
-    profileDelete (distinctId, isLogin, platform, upLoadTime) {
+    profileDelete(distinctId, isLogin, platform, upLoadTime) {
         this.resetCode();
         baseConfig.status.FnName = '$profile_delete';
         if (!check.checkUploadTime(upLoadTime)) {
@@ -1077,7 +1077,7 @@ class AnalysysAgent {
      * @throws AnalysysException
      */
 
-    alias (aliasId, distinctId, platform, upLoadTime) {
+    alias(aliasId, distinctId, platform, upLoadTime) {
         this.resetCode();
         baseConfig.status.FnName = '$alias';
         if (!check.checkUploadTime(upLoadTime)) {
@@ -1099,7 +1099,7 @@ class AnalysysAgent {
      * @param properties 事件属性
      * @throws AnalysysException
      */
-    track (distinctId, isLogin, eventName, properties, platform, upLoadTime) {
+    track(distinctId, isLogin, eventName, properties, platform, upLoadTime) {
         this.resetCode();
         baseConfig.status.FnName = eventName;
         // baseConfig.status.FnName = eventName || "$track";
@@ -1130,7 +1130,7 @@ class AnalysysAgent {
      * @param properties 属性
      * @throws AnalysysException
      */
-    upLoad (distinctId, isLogin, eventName, properties, platform, upLoadTime, merFlag) {
+    upLoad(distinctId, isLogin, eventName, properties, platform, upLoadTime, merFlag) {
         //API 方法校验了参数，上传就不校验了
         var eventMap = {};
         eventMap.appid = this.appId;
@@ -1177,7 +1177,7 @@ class AnalysysAgent {
     /**
      * 上传方式
      */
-    send () {
+    send() {
         var _this = this;
         this.resetCode();
         // 对appid 进行校验
