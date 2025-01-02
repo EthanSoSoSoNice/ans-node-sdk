@@ -1205,8 +1205,9 @@ class AnalysysAgent {
         this.postData = [];   //此时清空缓存 ，下次进入到 send的 是一个 可发送的新数据。
         clearTimeout(this.timer);
         this.timer = null;
-        let resRequest = request("POST", this.uploadURL, {
+        let resRequest = request(this.uploadURL, {
             json: true,
+            method: "POST",
             json: postData
         });
         if (resRequest.statusCode == 200) {
