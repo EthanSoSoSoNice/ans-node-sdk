@@ -2,8 +2,8 @@
 
 function _interopDefault(ex) { return (ex && (typeof ex === 'object') && 'default' in ex) ? ex['default'] : ex; }
 
-var request = _interopDefault(require('request'));
 var fs = _interopDefault(require('fs'));
+var axios = _interopDefault(require("axios"))
 var path = _interopDefault(require('path'));
 require('zlib');
 
@@ -922,9 +922,9 @@ class AnalysysAgent {
     /**
      * 立即发送所有收集的信息到服务器
      */
-    flush() {
+    async flush() {
         if (this.postData.length > 0) {
-            return this.send();
+            return await this.send();
         }
         return false;
     }
@@ -947,7 +947,7 @@ class AnalysysAgent {
      * @param isLogin 用户ID是否是登录 ID
      * @param properties 用户属性
      */
-    profileSet(distinctId, isLogin, properties, platform, upLoadTime) {
+    async profileSet(distinctId, isLogin, properties, platform, upLoadTime) {
         this.resetCode();
         baseConfig.status.FnName = '$profile_set';
         if (!check.checkUploadTime(upLoadTime)) {
@@ -955,7 +955,7 @@ class AnalysysAgent {
         }
         // properties = check.checkProperty(properties);
         if (check.checkDistinctId(distinctId) && check.checkBoolean(isLogin) && check.checkProperty(properties)) {
-            return this.upLoad(distinctId, isLogin, '$profile_set', properties, platform, upLoadTime);
+            return await this.upLoad(distinctId, isLogin, '$profile_set', properties, platform, upLoadTime);
         }
         errorLog();
         return false;
@@ -966,7 +966,7 @@ class AnalysysAgent {
      * @param isLogin 用户ID是否是登录 ID
      * @param properties 用户属性
      */
-    profileSetOnce(distinctId, isLogin, properties, platform, upLoadTime) {
+    async profileSetOnce(distinctId, isLogin, properties, platform, upLoadTime) {
         this.resetCode();
         baseConfig.status.FnName = '$profile_set_once';
         if (!check.checkUploadTime(upLoadTime)) {
@@ -974,7 +974,7 @@ class AnalysysAgent {
         }
         // properties = check.checkProperty(properties);
         if (check.checkDistinctId(distinctId) && check.checkBoolean(isLogin) && check.checkProperty(properties)) {
-            return this.upLoad(distinctId, isLogin, '$profile_set_once', properties, platform, upLoadTime);
+            return await this.upLoad(distinctId, isLogin, '$profile_set_once', properties, platform, upLoadTime);
         }
         errorLog();
         return false;
@@ -985,7 +985,7 @@ class AnalysysAgent {
      * @param isLogin 用户ID是否是登录 ID
      * @param properties 用户属性
      */
-    profileIncrement(distinctId, isLogin, properties, platform, upLoadTime) {
+    async profileIncrement(distinctId, isLogin, properties, platform, upLoadTime) {
         this.resetCode();
         baseConfig.status.FnName = '$profile_increment';
         if (!check.checkUploadTime(upLoadTime)) {
@@ -1005,7 +1005,7 @@ class AnalysysAgent {
                 baseConfig.status.key = 'properties';
                 errorLog();
             }
-            return this.upLoad(distinctId, isLogin, '$profile_increment', properties, platform, upLoadTime);
+            return await this.upLoad(distinctId, isLogin, '$profile_increment', properties, platform, upLoadTime);
         }
         if (!Util$1.paramType(properties) !== 'Object') {
             baseConfig.status.key = properties;
@@ -1021,7 +1021,7 @@ class AnalysysAgent {
      * @param isLogin 用户ID是否是登录 ID
      * @param properties 用户属性
      */
-    profileAppend(distinctId, isLogin, properties, platform, upLoadTime) {
+    async profileAppend(distinctId, isLogin, properties, platform, upLoadTime) {
         this.resetCode();
         baseConfig.status.FnName = '$profile_append';
         if (!check.checkUploadTime(upLoadTime)) {
@@ -1029,7 +1029,7 @@ class AnalysysAgent {
         }
         // properties = check.checkProperty(properties);
         if (check.checkDistinctId(distinctId) && check.checkBoolean(isLogin) && check.checkProperty(properties)) {
-            return this.upLoad(distinctId, isLogin, '$profile_append', properties, platform, upLoadTime);
+            return await this.upLoad(distinctId, isLogin, '$profile_append', properties, platform, upLoadTime);
         }
         errorLog();
         return false;
@@ -1041,7 +1041,7 @@ class AnalysysAgent {
      * @param property 用户属性名称
      * @throws AnalysysException
      */
-    profileUnSet(distinctId, isLogin, property, platform, upLoadTime) {
+    async profileUnSet(distinctId, isLogin, property, platform, upLoadTime) {
         this.resetCode();
         baseConfig.status.FnName = '$profile_unset';
         if (!check.checkUploadTime(upLoadTime)) {
@@ -1051,7 +1051,7 @@ class AnalysysAgent {
         if (check.checkDistinctId(distinctId) && check.checkBoolean(isLogin)) {
             var properties = {};
             properties[property] = '';
-            return this.upLoad(distinctId, isLogin, '$profile_unset', properties, platform, upLoadTime);
+            return await this.upLoad(distinctId, isLogin, '$profile_unset', properties, platform, upLoadTime);
         }
         errorLog();
         return false;
@@ -1062,14 +1062,14 @@ class AnalysysAgent {
      * @param isLogin 用户ID是否是登录 ID
      * @throws AnalysysException
      */
-    profileDelete(distinctId, isLogin, platform, upLoadTime) {
+    async profileDelete(distinctId, isLogin, platform, upLoadTime) {
         this.resetCode();
         baseConfig.status.FnName = '$profile_delete';
         if (!check.checkUploadTime(upLoadTime)) {
             return false;
         }
         if (check.checkDistinctId(distinctId) && check.checkBoolean(isLogin)) {
-            return this.upLoad(distinctId, isLogin, '$profile_delete', {}, platform, upLoadTime);
+            return await this.upLoad(distinctId, isLogin, '$profile_delete', {}, platform, upLoadTime);
         }
         errorLog();
         return false;
@@ -1081,7 +1081,7 @@ class AnalysysAgent {
      * @throws AnalysysException
      */
 
-    alias(aliasId, distinctId, platform, upLoadTime) {
+    async alias(aliasId, distinctId, platform, upLoadTime) {
         this.resetCode();
         baseConfig.status.FnName = '$alias';
         if (!check.checkUploadTime(upLoadTime)) {
@@ -1090,7 +1090,7 @@ class AnalysysAgent {
         if (check.checkAliasId(aliasId) && check.checkDistinctId(distinctId)) {
             var param = {};
             param.$original_id = distinctId;
-            return this.upLoad(aliasId, true, '$alias', param, platform, upLoadTime);
+            return await this.upLoad(aliasId, true, '$alias', param, platform, upLoadTime);
         }
         errorLog();
         return false;
@@ -1103,7 +1103,7 @@ class AnalysysAgent {
      * @param properties 事件属性
      * @throws AnalysysException
      */
-    track(distinctId, isLogin, eventName, properties, platform, upLoadTime) {
+    async track(distinctId, isLogin, eventName, properties, platform, upLoadTime) {
         this.resetCode();
         baseConfig.status.FnName = eventName;
         // baseConfig.status.FnName = eventName || "$track";
@@ -1121,7 +1121,7 @@ class AnalysysAgent {
         } else {
             // properties = check.checkProperty(properties);
             if (check.checkDistinctId(distinctId) && check.checkBoolean(isLogin) && check.checkProperty(properties)) {
-                return this.upLoad(distinctId, isLogin, eventName, properties, platform, upLoadTime, true);
+                return await this.upLoad(distinctId, isLogin, eventName, properties, platform, upLoadTime, true);
             }
         }
         errorLog();
@@ -1134,7 +1134,7 @@ class AnalysysAgent {
      * @param properties 属性
      * @throws AnalysysException
      */
-    upLoad(distinctId, isLogin, eventName, properties, platform, upLoadTime, merFlag) {
+    async upLoad(distinctId, isLogin, eventName, properties, platform, upLoadTime, merFlag) {
         //API 方法校验了参数，上传就不校验了
         var eventMap = {};
         eventMap.appid = this.appId;
@@ -1158,11 +1158,11 @@ class AnalysysAgent {
         this.postData.push(eventMap);
         //数据上传 满足 一定的条数上传( 数据可设置 )，立即上传;
         if (this.postData.length >= this.postNumber) {
-            return this.send();
+            return await this.send();
         }
         //没有设置上传条数，上传间隔时间，立即上传。
         if (!this.postNumber && !this.upPostDataTime) {
-            return this.send();
+            return await this.send();
         }
         //设置了上传间隔时间（可以为0。设置0 或者 不设置 默认为 0）, 上传条数大于 0 的情况下，会进入到时间条件的上传，到达时间就上传。
         if (this.upPostDataTime >= 0 && this.postData.length > 0) {
@@ -1181,7 +1181,7 @@ class AnalysysAgent {
     /**
      * 上传方式
      */
-    send() {
+    async send() {
         var _this = this;
         this.resetCode();
         // 对appid 进行校验
@@ -1209,11 +1209,7 @@ class AnalysysAgent {
         this.postData = [];   //此时清空缓存 ，下次进入到 send的 是一个 可发送的新数据。
         clearTimeout(this.timer);
         this.timer = null;
-        let resRequest = request(this.uploadURL, {
-            json: true,
-            json: postData,
-            method: "POST"
-        });
+        let resRequest = await axios.post(this.uploadURL, postData);
         if (resRequest.statusCode == 200) {
             if (Util$1.paramType(resRequest.body) === 'Object') {
                 //成功 打印成功日志 清空定时器 失败 打印失败日志 数据存储下来，下次上报
